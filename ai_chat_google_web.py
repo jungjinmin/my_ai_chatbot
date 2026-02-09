@@ -11,18 +11,18 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-2.5-flash')
 
 # 대화 기록 초기화
-if "message" in st.session_state:
-    st.session_state.message = []
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # 이전 대화 내용 화면에 출력
-for message in st.session_state.message:
+for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 # 사용자 입력창
 if prompt := st.chat_input("메시지를 입력하세요: "):
     # 사용자 메시지 표시 및 저장
-    st.session_state.message.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
@@ -30,5 +30,5 @@ if prompt := st.chat_input("메시지를 입력하세요: "):
     with st.chat_message("assistant"):
         response = model.generate_content(prompt)
         st.markdown(response.text)
-        st.session_state.message.append({"role": "assistant", "content": response.text})
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
 
